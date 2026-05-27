@@ -4,11 +4,13 @@ import com.urlShortner.project.dto.ShortenUrlRequest;
 import com.urlShortner.project.dto.ShortenUrlResponse;
 import com.urlShortner.project.entity.Url;
 import com.urlShortner.project.service.UrlService;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import java.util.Set;
+
+import java.net.URI;
 
 @RestController
 @RequiredArgsConstructor
@@ -28,4 +30,21 @@ public class UrlController {
         );
     }
 
+    @GetMapping("/{shortCode}")
+    public ResponseEntity<Void> redirect(
+            @PathVariable String shortCode) {
+
+        Url url = urlService.getOriginalUrl(shortCode);
+
+        return ResponseEntity
+                .status(HttpStatus.FOUND)
+                .location(URI.create(url.getOriginalUrl()))
+                .build();
+    }
+
+    @GetMapping("/api/url/trending")
+    public Set<Object> getTrendingUrls() {
+
+        return urlService.getTrendingUrls();
+    }
 }
