@@ -8,4 +8,8 @@ import lombok.Setter;
 public class ShortenUrlRequest {
 
     private String url;
+
+    private Integer expiryDays;
+
+    private String customAlias;
 }
